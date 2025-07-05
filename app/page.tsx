@@ -1,22 +1,25 @@
+// app/page.tsx
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import TransactionForm  from '@/components/TransactionForm';
-import { TxData } from '@/components/TransactionForm';
-import { Transaction } from '@/components/TransactionForm';
-
-
+import TransactionForm, { TxData } from '@/components/TransactionForm';
 import TransactionList from '@/components/TransactionList';
 import { toast } from 'sonner';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 
-// Transaction interface is now imported from TransactionForm
+// Define the ClientTransaction interface for client-side use (matches API response)
+interface ClientTransaction extends TxData {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
 
 export default function Home() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<ClientTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [editingTransaction, setEditingTransaction] = useState<ClientTransaction | null>(null);
 
   // Function to fetch transactions from the API
   const fetchTransactions = useCallback(async () => {
@@ -27,11 +30,11 @@ export default function Home() {
       if (!res.ok) {
         throw new Error(`Failed to fetch transactions: ${res.statusText}`);
       }
-      const data: Transaction[] = await res.json();
+      const data: ClientTransaction[] = await res.json();
       setTransactions(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching transactions:', err);
-      setError( 'Failed to load transactions.');
+      setError(err.message || 'Failed to load transactions.');
       toast.error('Failed to load transactions.');
     } finally {
       setLoading(false);
@@ -71,9 +74,9 @@ export default function Home() {
       // Re-fetch transactions to update the list
       await fetchTransactions();
       setEditingTransaction(null); // Clear editing state after successful submission
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error submitting transaction:', err);
-      toast.error( `Failed to ${editingTransaction ? 'update' : 'add'} transaction.`);
+      toast.error(err.message || `Failed to ${editingTransaction ? 'update' : 'add'} transaction.`);
     }
   };
 
@@ -94,14 +97,14 @@ export default function Home() {
       setTransactions(prev => prev.filter(t => t._id !== id));
       // Optionally re-fetch after a short delay or on next interaction
       // fetchTransactions();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error deleting transaction:', err);
-      toast.error('Failed to delete transaction.');
+      toast.error(err.message || 'Failed to delete transaction.');
     }
   };
 
   // Handle edit button click
-  const handleEditTransaction = (transaction: Transaction) => {
+  const handleEditTransaction = (transaction: ClientTransaction) => {
     setEditingTransaction(transaction);
   };
 

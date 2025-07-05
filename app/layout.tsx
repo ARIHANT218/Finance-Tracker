@@ -1,15 +1,22 @@
 // app/layout.tsx
-import './globals.css';
-import { Toaster } from 'sonner';
-import NavBar from '@/components/NavBar';
+import './globals.css'; // Your global CSS file (e.g., Tailwind CSS)
+import { Toaster } from 'sonner'; // Import the Toaster component
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const metadata = {
+  title: 'Finance Tracker',
+  description: 'Track your income and expenses.',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-muted/40 text-foreground antialiased">
-        <NavBar />
-        <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>
-        <Toaster richColors position="top-right" />
+      <body>
+        {children}
+        <Toaster position="bottom-right" richColors /> {/* Sonner Toaster */}
       </body>
     </html>
   );
