@@ -1,7 +1,7 @@
 // app/api/transactions/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import Transaction from '@/models/Transaction';
+import Transaction from '@/models/transaction';
 import { Types } from 'mongoose';
 
 export async function PUT(
