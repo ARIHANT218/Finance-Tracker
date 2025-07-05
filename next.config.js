@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverActions: true, // if using server actions
+     serverActions: {}, // if using server actions
   },
 };
 
