@@ -5,16 +5,25 @@ import { connectDB } from '@/lib/db';
 import Transaction from '@/models/transaction';
 
 /**
+ * Defines the structure for the dynamic route parameters.
+ */
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
+/**
  * Handles PUT requests to update a transaction by ID.
  * @param request The incoming NextRequest object.
- * @param params An object containing the dynamic route parameters, e.g., { id: string }.
+ * @param context An object containing the dynamic route parameters within a 'params' property.
  * @returns A NextResponse with the updated transaction or an error message.
  */
 export async function PUT(
   request: NextRequest, // Use NextRequest for better type safety and Next.js specific features
-  params: { id: string } // Directly accept the params object
+  context: RouteContext // Expects the context object with nested params
 ) {
-  const { id } = params; // Access the id directly from params
+  const { id } = context.params; // Access the id from context.params
 
   // Validate if the ID is a valid MongoDB ObjectId
   if (!Types.ObjectId.isValid(id)) {
@@ -42,14 +51,14 @@ export async function PUT(
 /**
  * Handles DELETE requests to delete a transaction by ID.
  * @param _request The incoming NextRequest object (prefixed with _ as it's not used).
- * @param params An object containing the dynamic route parameters, e.g., { id: string }.
+ * @param context An object containing the dynamic route parameters within a 'params' property.
  * @returns A NextResponse indicating success (204 No Content) or an error message.
  */
 export async function DELETE(
   _request: NextRequest, // Use NextRequest, _request indicates it's not used in the function body
-  params: { id: string } // Directly accept the params object
+  context: RouteContext // Expects the context object with nested params
 ) {
-  const { id } = params; // Access the id directly from params
+  const { id } = context.params; // Access the id from context.params
 
   // Validate if the ID is a valid MongoDB ObjectId
   if (!Types.ObjectId.isValid(id)) {
