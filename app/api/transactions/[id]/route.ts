@@ -1,27 +1,23 @@
+// app/api/transactions/[id]/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Types } from 'mongoose';
 import { connectDB } from '@/lib/db';
 import Transaction from '@/models/transaction';
 
-/**
- * Defines the structure for the dynamic route parameters.
- */
-interface RouteContext {
-  params: {
-    id: string;
-  };
-}
+// IMPORTANT: Ensure there is NO 'interface RouteContext { ... }' defined anywhere in this file.
 
 /**
  * Handles PUT requests to update a transaction by ID.
  * @param request The incoming NextRequest object.
  * @param context An object containing the dynamic route parameters within a 'params' property.
+ * The type is defined inline to avoid issues with named types.
  * @returns A NextResponse with the updated transaction or an error message.
  */
 export async function PUT(
-  request: NextRequest, // Use NextRequest for better type safety and Next.js specific features
-  context: RouteContext // Expects the context object with nested params
+  request: NextRequest,
+  // Define the type for the second argument inline here:
+  context: { params: { id: string } }
 ) {
   const { id } = context.params; // Access the id from context.params
 
@@ -52,11 +48,13 @@ export async function PUT(
  * Handles DELETE requests to delete a transaction by ID.
  * @param _request The incoming NextRequest object (prefixed with _ as it's not used).
  * @param context An object containing the dynamic route parameters within a 'params' property.
+ * The type is defined inline to avoid issues with named types.
  * @returns A NextResponse indicating success (204 No Content) or an error message.
  */
 export async function DELETE(
-  _request: NextRequest, // Use NextRequest, _request indicates it's not used in the function body
-  context: RouteContext // Expects the context object with nested params
+  _request: NextRequest,
+  // Define the type for the second argument inline here:
+  context: { params: { id: string } }
 ) {
   const { id } = context.params; // Access the id from context.params
 
